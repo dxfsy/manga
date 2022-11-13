@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { labelList } from "../../../api/request";
+import { labelList } from "../../../api/comic";
 export default {
   name: "fullLabel",
   data() {

@@ -39,6 +39,18 @@ const routes = [
         component: ()=>import(`../pages/${device}/searchPage.vue`)
     },
     {
+        path: '/login',
+        component: ()=>import(`../pages/${device}/loginPage.vue`)
+    },
+    {
+        path: '/register',
+        component: ()=>import(`../pages/${device}/registerPage.vue`)
+    },
+    {
+        path: '/forget',
+        component: ()=>import(`../pages/${device}/forgetPage.vue`)
+    },
+    {
         path:'/404',
         component:()=>import(`../pages/${device}/page404.vue`)
     }

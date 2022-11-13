@@ -26,7 +26,7 @@ import Layout from "../../components/PC/comment/layout.vue";
 import labelView from "../../components/PC/label/labelView.vue";
 import labelList from "../../components/PC/label/labelList.vue";
 import pagePagination from "../../components/PC/comment/pagePagination.vue";
-import { labels, labelListData } from "../../api/request";
+import { labels, labelListData } from "../../api/comic";
 export default {
   name: "labelPage",
   components: {

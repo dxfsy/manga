@@ -28,10 +28,25 @@
           收藏
         </div>
       </div>
-      <div class="user-wrapper">
-        <span class="login">登录</span>
+      <div class="user-wrapper" v-if="!loginStatus">
+        <span class="login" @click="$router.push({ path: '/login' })"
+          >登录</span
+        >
         |
-        <span class="register">注册</span>
+        <span class="register" @click="$router.push({ path: '/register' })">注册</span>
+      </div>
+      <div
+        class="user-wrapper is-login"
+        @mouseenter="isHover = true"
+        @mouseleave="isHover = false"
+        v-else
+      >
+        <span class="username">{{ username }}</span
+        ><i class="fa fa-user-o"></i>
+        <div class="user-opera" v-show="isHover">
+          <span class="settings">账号设置</span>
+          <span class="logout" @click="logout">退出</span>
+        </div>
       </div>
     </div>
   </div>
@@ -39,24 +54,38 @@
 
 <script>
 import { mapActions } from "vuex";
+import { isLogin } from "../../../api/user";
+import {
+  getLocalStorage,
+  removeLocalStorage,
+} from "../../../utils/localStorage";
+import {
+  getSessionStorage,
+  removeSessionStorage,
+} from "../../../utils/sessionStorage";
 export default {
   name: "headerBar",
   data() {
     return {
       value: "",
+      username: "",
+      // 是否是登录状态，false表示不是，true表示是
+      loginStatus: false,
+      // 鼠标是否悬浮在用户信息上
+      isHover: false,
     };
   },
   methods: {
     ...mapActions("search", ["setSearchList"]),
     async toSearch() {
       // if (this.$route.path !== "/search") {
-        this.$router.push({
-          path: "/search",
-          query: {
-            key: this.value,
-            page: 1,
-          },
-        });
+      this.$router.push({
+        path: "/search",
+        query: {
+          key: this.value,
+          page: 1,
+        },
+      });
       // }
     },
     // 改变当前路由的query参数
@@ -65,16 +94,38 @@ export default {
       query[key] = val;
       this.$router.replace({ query });
     },
+    // 退出登录
+    logout() {
+      removeLocalStorage("user");
+      removeSessionStorage("user");
+      location.reload();
+    },
   },
   watch: {
-    '$route.query.key': {
-      immediate:true,
-      handler(){
-        if(this.$route.path=='/search') {
+    "$route.query.key": {
+      immediate: true,
+      handler() {
+        if (this.$route.path == "/search") {
           this.value = this.$route.query.key;
         }
+      },
+    },
+  },
+  mounted() {
+    isLogin().then((res) => {
+      if (res.data.data.code == 200) {
+        // 表示token还未过期
+        let user = getSessionStorage("user") || getLocalStorage("user");
+        // 本地存储中有user数据
+        if (user !== null) {
+          this.username = user.username;
+          this.loginStatus = true;
+        } else {
+          //这里表示上次登录时没有按自动登录，所以本地存储中没有user数据
+          this.loginStatus = false;
+        }
       }
-    }
+    });
   },
 };
 </script>
@@ -89,7 +140,7 @@ export default {
     box-sizing: border-box;
     // line-height: 61px;
     // background-color: pink;
-    overflow: hidden;
+    // overflow: hidden;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -153,13 +204,54 @@ export default {
       }
     }
     .user-wrapper {
+      position: relative;
       font-size: 14px;
       color: #b2b2b2;
-      width: 80px;
+      width: 100px;
+      line-height: 20px;
       height: 20px;
       // background-color: pink;
       span {
         cursor: pointer;
+      }
+      i {
+        position: absolute;
+        right: 0;
+        margin-left: 10px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+      &.is-login {
+        font-size: 16px;
+        .username {
+          display: inline-block;
+          width: 80px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          text-align: right;
+        }
+      }
+      .user-opera {
+        position: absolute;
+        top: 21px;
+        left: -70px;
+        font-size: 14px;
+        color: #000;
+        width: 180px;
+        height: 60px;
+        line-height: 60px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        display: flex;
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 0 20px;
+        span {
+          &:hover {
+            color: #fd113a;
+          }
+        }
       }
     }
   }

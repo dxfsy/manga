@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { getComic, chapterList } from "../../api/request";
+import { getComic, chapterList } from "../../api/comic";
 import { setLocalStorage } from "../../utils/localStorage";
 import toast from "../../components/PC/comment/toast.vue";
 export default {

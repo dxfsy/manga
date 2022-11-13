@@ -31,7 +31,7 @@ import editCommend from "../../components/PC/home/editCommend.vue";
 import rankSpeed from "../../components/PC/home/rankSpeed.vue";
 import hotCategory from '../../components/PC/home/hotCategory.vue'
 import Layout from "../../components/PC/comment/layout.vue";
-import { homeList } from "../../api/request";
+import { homeList } from "../../api/comic";
 export default {
   name: "homePage",
   components: {

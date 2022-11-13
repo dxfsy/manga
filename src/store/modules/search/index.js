@@ -1,4 +1,4 @@
-import { searchList } from "../../../api/request";
+import { searchList } from "../../../api/comic";
 
 const state = {
     searchList:[],

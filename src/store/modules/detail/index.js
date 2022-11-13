@@ -1,4 +1,4 @@
-import { detailList } from "../../../api/request";
+import { detailList } from "../../../api/comic";
 
 const state = {
     detailData: null
