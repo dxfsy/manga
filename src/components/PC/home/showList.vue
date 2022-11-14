@@ -97,7 +97,7 @@ export default {
         this.$nextTick(() => {
           this.mySwiper = new Swiper(this.$refs.cur, {
             width: 1200,
-            loop: true,
+            // loop: true,
             // swiper内展示多少个item
             slidesPerView: this.onePageLength,
             // 多少个item为一组

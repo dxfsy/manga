@@ -30,3 +30,35 @@ export function isLogin() {
         url:`${process.env.VUE_APP_BASE_URL}/user/isLogin`,
     })  
 }
+
+export function addHistory(data){
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/history`,
+        data
+    })
+}
+
+export function updateCollect(data) {
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/collect`,
+        data
+    })
+}
+
+export function getComicHistory(data) {
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/comicHistory`,
+        data
+    })
+}
+
+export function getComicCollect(data) {
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/comicCollect`,
+        data
+    }) 
+}

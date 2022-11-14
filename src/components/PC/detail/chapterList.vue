@@ -10,6 +10,8 @@
         :key="index"
         v-show="index < defaultCount"
         :data="item"
+        :comicTitle="comicTitle"
+        :chapterLastest="chapterLastest"
       />
       <div
         class="detail-list-more"
@@ -29,7 +31,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "chapterList",
   computed: {
-    ...mapGetters("detail", ["chapterList"]),
+    ...mapGetters("detail", ["chapterList","comicTitle"]),
   },
   components: {
     chapterItem,
@@ -38,6 +40,7 @@ export default {
     return {
       order: "倒序",
       defaultCount: 20,
+      chapterLastest:null,
     };
   },
   methods: {
@@ -50,6 +53,9 @@ export default {
       this.defaultCount = this.chapterList.chapterList.length;
     },
   },
+  mounted(){
+    this.chapterLastest = this._.cloneDeep(this.chapterList.chapterList[0])
+  }
 };
 </script>
 

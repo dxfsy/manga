@@ -38,8 +38,10 @@
 
 <script>
 import { getComic, chapterList } from "../../api/comic";
-import { setLocalStorage } from "../../utils/localStorage";
+import { addHistory } from "../../api/user";
+import { getLocalStorage, setLocalStorage } from "../../utils/localStorage";
 import toast from "../../components/PC/comment/toast.vue";
+import { getSessionStorage } from "@/utils/sessionStorage";
 export default {
   name: "comicPage",
   components: {
@@ -69,9 +71,36 @@ export default {
       });
       this.chapterList = res.data.data.chapterList;
     },
+    async saveHistory(index) {
+      let isLogin = getSessionStorage("isLogin");
+      // 游客模式（用户没有登录，历史记录存在本地里）
+      if (!isLogin) {
+        setLocalStorage(this.$route.query.comicId, {
+          chapterId:this.chapterList[index].chapterId,
+          title: this.chapterList[index].chapterTitle,
+          total: this.chapterList[index].chapterTotal,
+        });
+      } else {
+        // 用户模式（已登录）
+        let user = getLocalStorage("user") || getSessionStorage("user");
+        let username = user.username;
+        let res = await addHistory({
+          username,
+          comicId: this.$route.query.comicId,
+          comicTitle: this.$route.query.comicTitle,
+          chapterHistoryId: this.chapterList[index].chapterId,
+          chapterHistoryName: this.chapterList[index].chapterTitle,
+          chapterHistoryTotal: this.chapterList[index].chapterTotal,
+          chapterLastestId: this.chapterList[0].chapterId,
+          chapterLastestName: this.chapterList[0].chapterTitle,
+          chapterLastestTotal: this.chapterList[0].chapterTotal,
+        });
+        console.log(res);
+      }
+    },
     // 跳转至第一页或上一章节
     backToFirst: _.throttle(
-      function(e) {
+      function (e) {
         if (parseInt(this.$route.query.page) === 1) {
           let i;
           for (i = this.chapterList.length - 1; i >= 0; i--) {
@@ -82,13 +111,10 @@ export default {
             this.showToast("当前漫画已无上一话");
           // 上一话的chapterId
           else {
-            let prevPageChapterId = this.chapterList[i + 1].chapterId;
+            let prevPageChapterId = this.chapterList[i+1].chapterId;
             // console.log('上一话Id',prevPageChapterId);
-            setLocalStorage(this.$route.query.comicId, {
-              chapterId:prevPageChapterId,
-              title:this.chapterList[i + 1].chapterTitle,
-              total:this.chapterList[i + 1].chapterTotal
-            });
+            this.saveHistory(i+1);
+
             this.imageUrl = null;
             this.routeChange("chapterId", prevPageChapterId);
             this.routeChange("page", 1);
@@ -177,11 +203,8 @@ export default {
           else {
             let nextPageChapterId = this.chapterList[i - 1].chapterId;
             // console.log('下一话Id',nextPageChapterId);
-            setLocalStorage(this.$route.query.comicId, {
-              chapterId:nextPageChapterId,
-              title:this.chapterList[i - 1].chapterTitle,
-              total:this.chapterList[i - 1].chapterTotal
-            });
+            this.saveHistory(i-1);
+
             this.imageUrl = null;
             this.routeChange("chapterId", nextPageChapterId);
             this.routeChange("page", 1);

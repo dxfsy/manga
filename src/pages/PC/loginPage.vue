@@ -42,6 +42,7 @@ import Layout from "../../components/PC/comment/layout.vue";
 import Toast from "../../components/PC/comment/toast.vue";
 import { login } from "../../api/user";
 import { mapMutations } from "vuex";
+import { setSessionStorage } from '@/utils/sessionStorage';
 export default {
   name: "loginPage",
   components: {
@@ -68,6 +69,7 @@ export default {
       });
       let toastFinish = await this.showToast(res.data.data.message);
       if (res.data.data.code == 200 && toastFinish) {
+        setSessionStorage('isLogin',true)
         this.set_Token({
           token: res.data.data.token,
           username: res.data.data.username,

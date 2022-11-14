@@ -33,7 +33,9 @@
           >登录</span
         >
         |
-        <span class="register" @click="$router.push({ path: '/register' })">注册</span>
+        <span class="register" @click="$router.push({ path: '/register' })"
+          >注册</span
+        >
       </div>
       <div
         class="user-wrapper is-login"
@@ -61,6 +63,7 @@ import {
 } from "../../../utils/localStorage";
 import {
   getSessionStorage,
+  setSessionStorage,
   removeSessionStorage,
 } from "../../../utils/sessionStorage";
 export default {
@@ -98,6 +101,7 @@ export default {
     logout() {
       removeLocalStorage("user");
       removeSessionStorage("user");
+      setSessionStorage("isLogin", false);
       location.reload();
     },
   },
@@ -120,10 +124,12 @@ export default {
         if (user !== null) {
           this.username = user.username;
           this.loginStatus = true;
-        } else {
-          //这里表示上次登录时没有按自动登录，所以本地存储中没有user数据
-          this.loginStatus = false;
+          setSessionStorage("isLogin", true);
         }
+      } else {
+        // token过期
+        this.loginStatus = false;
+        setSessionStorage("isLogin", false);
       }
     });
   },

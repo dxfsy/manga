@@ -11,7 +11,9 @@
 </template>
 
 <script>
-import { setLocalStorage } from "../../../utils/localStorage";
+import { getLocalStorage, setLocalStorage } from "../../../utils/localStorage";
+import { getSessionStorage } from "@/utils/sessionStorage";
+import { addHistory } from "../../../api/user";
 export default {
   name: "chapterItem",
   props: {
@@ -19,23 +21,56 @@ export default {
       type: Object,
       required: true,
     },
+    comicTitle: {
+      type:String,
+    },
+    chapterLastest: {
+      type:Object,
+    }
+  },
+  data() {
+    return {
+
+    };
   },
   methods: {
-    onClickToComic(chapterId) {
-      setLocalStorage(this.$route.query.comicId, {
-        chapterId,
-        title: this.data.chapterTitle,
-        total: this.data.chapterTotal
-      });
+    async onClickToComic(chapterId) {
+      let isLogin = getSessionStorage('isLogin')
+      // 游客模式（用户没有登录，历史记录存在本地里）
+      if (!isLogin) {
+        setLocalStorage(this.$route.query.comicId, {
+          chapterId,
+          title: this.data.chapterTitle,
+          total: this.data.chapterTotal,
+        });
+      } else {
+        // 用户模式（已登录）
+        let user = getLocalStorage('user') || getSessionStorage('user')
+        let username = user.username 
+        let res = await addHistory({
+          username,
+          comicId: this.$route.query.comicId,
+          comicTitle: this.comicTitle,
+          chapterHistoryId: this.data.chapterId,
+          chapterHistoryName: this.data.chapterTitle,
+          chapterHistoryTotal: this.data.chapterTotal,
+          chapterLastestId: this.chapterLastest.chapterId,
+          chapterLastestName: this.chapterLastest.chapterTitle,
+          chapterLastestTotal: this.chapterLastest.chapterTotal
+        })
+        console.log(res);
+      }
+
+      // 跳转至漫画页
       let total = this.data.chapterTotal;
       let chapterName = this.data.chapterTitle;
       let comicId = this.$route.query.comicId;
-
       console.log(comicId, chapterId);
       this.$router.push({
         path: "/comic",
         query: {
           comicId,
+          comicTitle:this.comicTitle,
           chapterId,
           page: 1,
           total,

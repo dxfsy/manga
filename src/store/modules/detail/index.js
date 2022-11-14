@@ -1,5 +1,4 @@
 import { detailList } from "../../../api/comic";
-
 const state = {
     detailData: null
 };
@@ -32,8 +31,10 @@ const getters = {
         if(state.detailData==null) return null
         let { updateTime, chapterList } = state.detailData
         return { updateTime, chapterList }
-    }
-
+    },
+    comicTitle(state) {
+        return state.detailData.comicName
+    },
 };
 
 export default {

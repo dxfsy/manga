@@ -30,9 +30,10 @@
           续看：{{ title }}
           <i class="fa fa-book"></i>
         </span>
-        <span class="collect">
+        <span class="collect" @click="collect">
           收藏
-          <i class="fa fa-heart-o"></i>
+          <i class="fa fa-heart-o" v-if="!isCollect"></i>
+          <i class="fa fa-heart" style="color:#ff494f" v-else></i>
         </span>
       </div>
     </div>
@@ -41,8 +42,10 @@
 </template>
 
 <script>
+import { getSessionStorage } from "@/utils/sessionStorage";
 // import { mapGetters } from "vuex";
 import { getLocalStorage } from "../../../utils/localStorage";
+import { getComicHistory,updateCollect,getComicCollect } from "../../../api/user";
 export default {
   name: "detailInfo",
   props: {
@@ -60,10 +63,15 @@ export default {
         };
       },
     },
+    chapterLastest: {
+      type:Object,
+      default:null,
+    }
   },
   data() {
     return {
       historyChapter: null,
+      isCollect: 0,
     };
   },
   computed: {
@@ -80,8 +88,28 @@ export default {
       else return this.chapterFirst.chapterId;
     },
   },
-  mounted() {
-    this.historyChapter = getLocalStorage(this.$route.query.comicId);
+  created() {
+    let isLogin = getSessionStorage("isLogin");
+    if (isLogin) {
+      let user = getLocalStorage('user') || getSessionStorage('user')
+      getComicHistory({username:user.username,comicId:this.$route.query.comicId}).then(res=> {
+        if(res.data.data.history) {
+          let {chapterHistoryId,chapterHistoryName,chapterHistoryTotal} = res.data.data.history
+          this.historyChapter = {
+            chapterId:chapterHistoryId,
+            title:chapterHistoryName,
+            total:chapterHistoryTotal
+          }
+        }
+      })
+      getComicCollect({username:user.username,comicId:this.$route.query.comicId}).then(res=>{
+        if(res.data.data.isCollect) {
+          this.isCollect = res.data.data.isCollect
+        }
+      })
+    } else {
+      this.historyChapter = getLocalStorage(this.$route.query.comicId);
+    }
   },
   methods: {
     // 跳转漫画页
@@ -112,6 +140,31 @@ export default {
         },
       });
     },
+    // 收藏
+    async collect(){
+      let isLogin = getSessionStorage('isLogin')
+      if(!isLogin) {
+        this.$router.push({
+          path:'/login'
+        })
+      }else {
+        let user = getLocalStorage('user') || getSessionStorage('user')
+        if(this.chapterLastest!==null) {
+          let res = await updateCollect({
+            username: user.username,
+            comicId: this.$route.query.comicId,
+            comicTitle: this.detailInfo.comicName,
+            chapterLastestId: this.chapterLastest.chapterId,
+            chapterLastestTitle: this.chapterLastest.chapterTitle,
+            chapterLastestTotal: this.chapterLastest.chapterTotal,
+            isCollect: this.isCollect == 0 ? 1 : 0
+          })
+          if(res.data.data.code=200) {
+            this.isCollect = this.isCollect == 0 ? 1 : 0 
+          }
+        }
+      }
+    }
   },
 };
 </script>

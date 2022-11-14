@@ -5,6 +5,7 @@
         v-if="detailInfo "
         :detailInfo="detailInfo"
         :chapterFirst="chapterFirst"
+        :chapterLastest="chapterLastest"
       />
       <chapterList v-if="chapterList" />
     </Layout>
@@ -29,6 +30,7 @@ export default {
   data(){
     return {
       chapterFirst:null,
+      chapterLastest: null,
     }
   },
   methods: {
@@ -40,6 +42,7 @@ export default {
   created() {
     if (!this.detailInfo) this.getDetailData(this.$route.query.comicId);
     this.chapterFirst = this.chapterList.chapterList[this.chapterList.chapterList.length - 1];
+    this.chapterLastest = this.chapterList.chapterList[0];
   },
 };
 </script>
