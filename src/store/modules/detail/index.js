@@ -35,6 +35,9 @@ const getters = {
     comicTitle(state) {
         return state.detailData.comicName
     },
+    coverUrl(state) {
+        return state.detailData.coverUrl
+    }
 };
 
 export default {

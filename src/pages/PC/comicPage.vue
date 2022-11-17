@@ -42,10 +42,15 @@ import { addHistory } from "../../api/user";
 import { getLocalStorage, setLocalStorage } from "../../utils/localStorage";
 import toast from "../../components/PC/comment/toast.vue";
 import { getSessionStorage } from "@/utils/sessionStorage";
+import { mapGetters } from "vuex";
+
 export default {
   name: "comicPage",
   components: {
     toast,
+  },
+  computed: {
+    ...mapGetters("detail", ["coverUrl"]),
   },
   data() {
     return {
@@ -76,7 +81,7 @@ export default {
       // 游客模式（用户没有登录，历史记录存在本地里）
       if (!isLogin) {
         setLocalStorage(this.$route.query.comicId, {
-          chapterId:this.chapterList[index].chapterId,
+          chapterId: this.chapterList[index].chapterId,
           title: this.chapterList[index].chapterTitle,
           total: this.chapterList[index].chapterTotal,
         });
@@ -87,6 +92,7 @@ export default {
         let res = await addHistory({
           username,
           comicId: this.$route.query.comicId,
+          comicCover: this.coverUrl,
           comicTitle: this.$route.query.comicTitle,
           chapterHistoryId: this.chapterList[index].chapterId,
           chapterHistoryName: this.chapterList[index].chapterTitle,
@@ -111,9 +117,9 @@ export default {
             this.showToast("当前漫画已无上一话");
           // 上一话的chapterId
           else {
-            let prevPageChapterId = this.chapterList[i+1].chapterId;
+            let prevPageChapterId = this.chapterList[i + 1].chapterId;
             // console.log('上一话Id',prevPageChapterId);
-            this.saveHistory(i+1);
+            this.saveHistory(i + 1);
 
             this.imageUrl = null;
             this.routeChange("chapterId", prevPageChapterId);
@@ -203,7 +209,7 @@ export default {
           else {
             let nextPageChapterId = this.chapterList[i - 1].chapterId;
             // console.log('下一话Id',nextPageChapterId);
-            this.saveHistory(i-1);
+            this.saveHistory(i - 1);
 
             this.imageUrl = null;
             this.routeChange("chapterId", nextPageChapterId);

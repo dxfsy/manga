@@ -66,6 +66,7 @@ export default {
     async userUpdatePassword() {
       let { username, oldPassword, newPassword, againPassword } = this;
       let res = await updatePassword({ username, oldPassword, newPassword, againPassword });
+      console.log(res);
       let udpatePasswordStatus = await this.showToast(res.data.data.message);
       if (res.data.data.code == 200 && udpatePasswordStatus) {
         this.$router.push({

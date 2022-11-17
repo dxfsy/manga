@@ -62,3 +62,51 @@ export function getComicCollect(data) {
         data
     }) 
 }
+
+export function getCollectList(data) {
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/collectList`,
+        data
+    }) 
+}
+
+export function getCollectSearchList(data) {
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/collectSearch`,
+        data
+    }) 
+}
+
+export function removeCollect(data) {
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/removeCollect`,
+        data
+    }) 
+}
+
+export function getHistoryList(data) {
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/historyList`,
+        data
+    }) 
+}
+
+export function getHistorySearchList(data) {
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/historySearch`,
+        data
+    }) 
+}
+
+export function removeHistory(data) {
+    return _axios({
+        method: 'post',
+        url:`${process.env.VUE_APP_BASE_URL}/user/removeHistory`,
+        data
+    }) 
+}

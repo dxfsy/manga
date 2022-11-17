@@ -51,6 +51,18 @@ const routes = [
         component: ()=>import(`../pages/${device}/forgetPage.vue`)
     },
     {
+        path:'/collect',
+        component: ()=>import(`../pages/${device}/collectPage.vue`)
+    },
+    {
+        path:'/history',
+        component: ()=>import(`../pages/${device}/historyPage.vue`)
+    },
+    {
+        path:'/safe',
+        component: ()=>import(`../pages/${device}/safePage.vue`)
+    },
+    {
         path:'/404',
         component:()=>import(`../pages/${device}/page404.vue`)
     }

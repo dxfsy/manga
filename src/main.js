@@ -4,6 +4,8 @@ import store from './store'
 import router from './router/index'
 import 'font-awesome/css/font-awesome.css' //字体图标库
 import _ from 'lodash'
+import { getSessionStorage } from './utils/sessionStorage'
+import { getLocalStorage } from './utils/localStorage'
 Vue.prototype._ = _
 
 Vue.config.productionTip = false
@@ -20,6 +22,13 @@ router.beforeEach(async (to,from,next)=> {
       page: to.query.page
     })
     next()
+  }else if(to.path=='/collect' || to.path=='/history' || to.path=='/safe'){
+    let user = getSessionStorage('user') || getLocalStorage('user')
+    if(user!==null && getSessionStorage('isLogin')) {
+      next()
+    }else {
+      router.push({path:'/login'})
+    }
   }else {
     console.log(to);next()
   }

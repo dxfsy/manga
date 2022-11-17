@@ -14,6 +14,7 @@
 import { getLocalStorage, setLocalStorage } from "../../../utils/localStorage";
 import { getSessionStorage } from "@/utils/sessionStorage";
 import { addHistory } from "../../../api/user";
+import { mapGetters } from "vuex";
 export default {
   name: "chapterItem",
   props: {
@@ -22,20 +23,21 @@ export default {
       required: true,
     },
     comicTitle: {
-      type:String,
+      type: String,
     },
     chapterLastest: {
-      type:Object,
-    }
+      type: Object,
+    },
+  },
+  computed: {
+    ...mapGetters('detail',['coverUrl'])
   },
   data() {
-    return {
-
-    };
+    return {};
   },
   methods: {
     async onClickToComic(chapterId) {
-      let isLogin = getSessionStorage('isLogin')
+      let isLogin = getSessionStorage("isLogin");
       // 游客模式（用户没有登录，历史记录存在本地里）
       if (!isLogin) {
         setLocalStorage(this.$route.query.comicId, {
@@ -45,19 +47,20 @@ export default {
         });
       } else {
         // 用户模式（已登录）
-        let user = getLocalStorage('user') || getSessionStorage('user')
-        let username = user.username 
+        let user = getLocalStorage("user") || getSessionStorage("user");
+        let username = user.username;
         let res = await addHistory({
           username,
           comicId: this.$route.query.comicId,
+          comicCover: this.coverUrl,
           comicTitle: this.comicTitle,
           chapterHistoryId: this.data.chapterId,
           chapterHistoryName: this.data.chapterTitle,
           chapterHistoryTotal: this.data.chapterTotal,
           chapterLastestId: this.chapterLastest.chapterId,
           chapterLastestName: this.chapterLastest.chapterTitle,
-          chapterLastestTotal: this.chapterLastest.chapterTotal
-        })
+          chapterLastestTotal: this.chapterLastest.chapterTotal,
+        });
         console.log(res);
       }
 
@@ -70,7 +73,7 @@ export default {
         path: "/comic",
         query: {
           comicId,
-          comicTitle:this.comicTitle,
+          comicTitle: this.comicTitle,
           chapterId,
           page: 1,
           total,

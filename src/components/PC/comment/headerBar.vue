@@ -15,15 +15,15 @@
         </div>
       </div>
       <div class="btns-wrapper">
-        <div class="category">
+        <div class="category" @click="tabToLabel">
           <i class="fa fa-align-justify"></i>
           分类
         </div>
-        <div class="history">
+        <div class="history" @click="$router.push({ path: '/history' })">
           <i class="fa fa-history"></i>
           历史
         </div>
-        <div class="collect">
+        <div class="collect" @click="$router.push({ path: '/collect' })">
           <i class="fa fa-star-o"></i>
           收藏
         </div>
@@ -46,7 +46,7 @@
         <span class="username">{{ username }}</span
         ><i class="fa fa-user-o"></i>
         <div class="user-opera" v-show="isHover">
-          <span class="settings">账号设置</span>
+          <span class="settings" @click="$router.push({path:'/safe'})">账号设置</span>
           <span class="logout" @click="logout">退出</span>
         </div>
       </div>
@@ -104,6 +104,14 @@ export default {
       setSessionStorage("isLogin", false);
       location.reload();
     },
+    tabToLabel(){
+      this.$router.push({
+        path:'/label',
+        query: {
+          query: { labelName: '全部', status: '全部', sort: '人气', page: 1 },
+        }
+      })
+    }
   },
   watch: {
     "$route.query.key": {
@@ -199,14 +207,9 @@ export default {
       color: #b2b2b2;
       font-size: 14px;
       display: flex;
-      .category {
+      .category,.history,.collect {
         flex: 1;
-      }
-      .history {
-        flex: 1;
-      }
-      .collect {
-        flex: 1;
+        cursor: pointer;
       }
     }
     .user-wrapper {
