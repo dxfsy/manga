@@ -58,8 +58,8 @@ import centerLayout from "../../components/PC/comment/centerLayout.vue";
 import bookmarkTopBar from "../../components/PC/comment/bookmarkTopBar.vue";
 import toast from '../../components/PC/comment/toast.vue'
 import { getCollectList, getCollectSearchList,removeCollect } from "../../api/user";
-import { getSessionStorage } from "@/utils/sessionStorage";
-import { getLocalStorage } from "@/utils/localStorage";
+import { getSessionStorage } from "../../utils/sessionStorage";
+import { getLocalStorage } from "../../utils/localStorage";
 export default {
   name: "collectPage",
   components: {

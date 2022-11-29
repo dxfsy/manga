@@ -24,7 +24,6 @@
           <!-- 如果需要分页器 -->
           <div class="swiper-pagination"></div>
         </div>
-        <div class="next-slide">2</div>
         <!-- swiper5-end -->
       </div>
       <!-- 不用swiper渲染列表 -->

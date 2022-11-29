@@ -22,7 +22,7 @@
           <div class="item-title">{{ item.detail.title }}</div>
           <div class="chapter-wrapper">
             <span class="chapter-state">{{ item.detail.state }}</span>
-            <a :href="item.detail.chapterId">{{ item.detail.text }}</a>
+            <a :href="item.detail.chapterId" @click.prevent="()=>{}">{{ item.detail.text }}</a>
           </div>
         </div>
       </div>

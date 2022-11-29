@@ -33,9 +33,11 @@ const getters = {
         return { updateTime, chapterList }
     },
     comicTitle(state) {
+        if(state.detailData==null) return null
         return state.detailData.comicName
     },
     coverUrl(state) {
+        if(state.detailData==null) return null
         return state.detailData.coverUrl
     }
 };

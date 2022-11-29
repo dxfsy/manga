@@ -107,9 +107,7 @@ export default {
     tabToLabel(){
       this.$router.push({
         path:'/label',
-        query: {
-          query: { labelName: '全部', status: '全部', sort: '人气', page: 1 },
-        }
+        query: { labelName: '全部', status: '全部', sort: '人气', page: 1 },
       })
     }
   },

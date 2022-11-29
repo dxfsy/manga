@@ -249,9 +249,9 @@ export default {
   created() {
     this.getChapterList();
   },
-  mounted() {
-    this.toasts = this.$refs.toast;
-  },
+  mounted(){
+    this.toasts = this.$refs.toast
+  }
 };
 </script>
 
